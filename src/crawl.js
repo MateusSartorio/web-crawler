@@ -1,11 +1,26 @@
 const { JSDOM } = require("jsdom");
 
-async function crawlPage(currentURL) {
+async function crawlPage(baseURL, currentURL, pages) {
+    const baseURLObj = new URL(baseURL);
+    const currentURLObj = new URL(currentURL);
+    
+    if(baseURLObj.hostname !== currentURLObj.hostname)
+        return pages;
+    
+    const normalizedCurrentURL = normalizeURL(currentURL);
+    if(pages[normalizedCurrentURL] > 0) {
+        pages[normalizedCurrentURL]++;
+        return pages;
+    }
+    
+    pages[normalizedCurrentURL] = 1;
+    console.log(`actively crawling: ${currentURL}`);
+
     try {
         const response = await fetch(currentURL);
         if(response.status < 200 || response.status > 399) {
             console.log(`error in fetch with status code: ${response.status} on page: ${currentURL}`);
-            return;
+            return pages;
         }
         
         const contentType = response.headers.get("content-type");
@@ -14,12 +29,18 @@ async function crawlPage(currentURL) {
             return;
         }
 
-        const urls = getURLsFromHTML(await response.text(), currentURL);
-        console.log(urls);
+        const htmlBody = await response.text();
+        const nextURLs = getURLsFromHTML(htmlBody, currentURL);
+
+        for(const nextURL of nextURLs)
+        //     pages = await crawlPage(baseURL, nextURL, pages);
+                console.log(nextURL)
     }
     catch(e) {
         console.log(`error fetching url: ${e.message} on page: ${currentURL}`);
     }
+
+    return pages;
 }
 
 function getURLsFromHTML(HTMLBody, baseURL) {
@@ -29,7 +50,7 @@ function getURLsFromHTML(HTMLBody, baseURL) {
     const linkElements = dom.querySelectorAll("a");
 
     for(linkElement of linkElements) {
-        if(linkElement.href[0] == "/") {
+        if(linkElement.href[0] != "h") {
             try {
                 const newURL = new URL(`${baseURL}${linkElement.href}`);
                 urls.push(normalizeURL(`${baseURL}${linkElement.href}`));
