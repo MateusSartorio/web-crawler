@@ -24,17 +24,17 @@ async function crawlPage(baseURL, currentURL, pages) {
         }
         
         const contentType = response.headers.get("content-type");
-        if(!contentType.toLowerCase().includes("text/html")) {
+        if(!contentType.includes("text/html")) {
             console.log(`non HTML response, content type: ${contentType} on page: ${currentURL}`);
-            return;
+            return pages;
         }
 
         const htmlBody = await response.text();
-        const nextURLs = getURLsFromHTML(htmlBody, currentURL);
+        const nextURLs = getURLsFromHTML(htmlBody, baseURL);
 
         for(const nextURL of nextURLs)
-        //     pages = await crawlPage(baseURL, nextURL, pages);
-                console.log(nextURL)
+            pages = await crawlPage(baseURL, `https://${nextURL}`, pages);
+                // console.log(`https://${nextURL}`)
     }
     catch(e) {
         console.log(`error fetching url: ${e.message} on page: ${currentURL}`);
@@ -50,7 +50,7 @@ function getURLsFromHTML(HTMLBody, baseURL) {
     const linkElements = dom.querySelectorAll("a");
 
     for(linkElement of linkElements) {
-        if(linkElement.href[0] != "h") {
+        if(linkElement.href[0] == "/") {
             try {
                 const newURL = new URL(`${baseURL}${linkElement.href}`);
                 urls.push(normalizeURL(`${baseURL}${linkElement.href}`));
