@@ -1,0 +1,23 @@
+{
+  "name": "web-crawler",
+  "version": "1.0.0",
+  "description": "a simple web crawler made to test http protocol concepts",
+  "main": "main.js",
+  "scripts": {
+    "start": "tsc && node ./src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MateusSartorio/web-crawler.git"
+  },
+  "author": "Mateus Sartorio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MateusSartorio/web-crawler/issues"
+  },
+  "homepage": "https://github.com/MateusSartorio/web-crawler#readme",
+  "devDependencies": {
+    "jest": "^29.4.3"
+  }
+}
