@@ -4,7 +4,7 @@
   "description": "a simple web crawler made to test http protocol concepts",
   "main": "main.js",
   "scripts": {
-    "start": "tsc && node ./src/main.js",
+    "start": "node --no-warnings ./src/main.js",
     "test": "jest"
   },
   "repository": {
