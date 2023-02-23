@@ -39,7 +39,7 @@ async function crawlPage(baseURL, currentURL, pages) {
     catch(e) {
         console.log(`error fetching url: ${e.message} on page: ${currentURL}`);
     }
-
+    
     return pages;
 }
 
