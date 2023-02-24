@@ -1,10 +1,12 @@
-function printReport(sortedPages) {
+function printReport(pages) {
+    const sortedPages = sortPages(pages);
+
     console.log("=======================");
     console.log("REPORT");
     console.log("=======================");
     
-    for(const page in sortedPages)
-        console.log(`Found ${pages[page]} links to page: ${page}`);
+    for(const page of sortedPages)
+        console.log(`Found ${page[1]} links to page: ${page[0]}`);
 
     console.log("=======================");
     console.log("END REPORT");
@@ -19,6 +21,6 @@ function sortPages(pages) {
 }
 
 module.exports = {
-    sortPages
+    sortPages,
     printReport
 }
